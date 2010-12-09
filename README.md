@@ -21,7 +21,7 @@ A very simple GeoCouch query that accepts an OpenSearch formatted bounding box p
 
 Example:
 
-    $ curl -X GET 'http://localhost:5984/yourdb/_design/geo/_spatial/points/=-122.677,45.523,-122.675,45.524'
+    $ curl -X GET 'http://localhost:5984/yourdb/_design/geo/_spatial/points/bbox=-122.677,45.523,-122.675,45.524'
     {"rows":[     
     {"id":"ef512bfdc9b17e9827f7275dd09af1d7","bbox":[-122.675639,45.524063,-122.675639,45.524063],"value":{"id":"ef512bfdc9b17e9827f7275dd09af1d7","geometry":{"coordinates":[-122.675639,45.524063],"type":"Point"}}},
     {"id":"ef512bfdc9b17e9827f7275dd06638b4","bbox":[-122.676609,45.523206,-122.676609,45.523206],"value":{"id":"ef512bfdc9b17e9827f7275dd06638b4","geometry":{"coordinates":[-122.676609,45.523206],"type":"Point"}}},

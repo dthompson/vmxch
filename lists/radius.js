@@ -7,23 +7,42 @@ function(head, req) {
       start({"headers":{"Content-Type" : "text/plain"}});
 
     function isPointInPoly(poly, pt) {
-        for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-            ((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1] < poly[i][1]))
-            && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0])
-            && (c = !c);
-        return c;
+      for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+        ((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1] < poly[i][1]))
+        && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0])
+        && (c = !c);
+      return c;
     }
     
+    function numberToRadius(number) {
+  	   return number * Math.PI / 180;
+  	}
+
+  	function numberToDegree(number) {
+  	   return number * 180 / Math.PI;
+  	}
+  	
     function circle(radius, center) {
-        // 15 sided circle; the larger the radius the more inaccurate it will be
-        var steps = 15;
-        var poly = [[center[0], center[1]]]
-        for (var i = 0; i < steps; i++) {
-            poly[i] = [];
-            poly[i][0] = (center[0] + radius * Math.cos(2 * Math.PI * i / steps));
-            poly[i][1] = (center[1] + radius * Math.sin(2 * Math.PI * i / steps));
-        }
-        return poly;
+      // convert degree/km to radiant
+      var dist = radius / 6371;
+      var radCenter = [numberToRadius(center[0]), numberToRadius(center[1])];
+      // 15 sided circle; the larger the radius the more inaccurate it will be
+      var steps = 15;
+      var poly = [[center[0], center[1]]];
+      for (var i = 0; i < steps; i++) {
+      	var brng = 2 * Math.PI * i / steps;  
+      	var lat = Math.asin(Math.sin(radCenter[0]) * Math.cos(dist) + 
+                  Math.cos(radCenter[0]) * Math.sin(dist) * Math.cos(brng));
+      	var lng = radCenter[1] + Math.atan2(Math.sin(brng) * Math.sin(dist) *
+                          Math.cos(radCenter[0]), 
+                          Math.cos(dist) - Math.sin(radCenter[0]) *
+                          Math.sin(lat));
+
+          poly[i] = [];
+          poly[i][0] = numberToDegree(lat);
+          poly[i][1] = numberToDegree(lng);
+      }
+      return poly;
     }
     
     function rectangleCentroid(bbox) {
@@ -48,8 +67,8 @@ function(head, req) {
     var started = false;
     send('{"rows":[');
     while (row = getRow()) {
-      if( isPointInPoly( circle, [row.value.geometry.coordinates[0], row.value.geometry.coordinates[1]] ) ) {
-        if(started) send(",\n");
+      if (isPointInPoly(circle, [row.value.geometry.coordinates[0], row.value.geometry.coordinates[1]])) {
+        if (started) send(",\n");
         send( JSON.stringify(row.value));
         started = true;
       }

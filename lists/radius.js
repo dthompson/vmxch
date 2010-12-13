@@ -1,5 +1,5 @@
 function(head, req) {
-  var g = require('vendor/geojson-utils').init(), 
+  var g = require('vendor/geojson-utils'),
       row,
       radius = req.query.radius,
       bbox = JSON.parse("[" + req.query.bbox + "]"),
@@ -19,6 +19,8 @@ function(head, req) {
   if ('callback' in req.query) send(req.query['callback'] + "(");
   send('{"rows":[');
   while (row = getRow()) {
+    log(row.value.geometry)
+    log('taco')
     if (g.pointInPolygon(row.value.geometry, circle)) {
       if (startedOutput) send(",\n");
       send(JSON.stringify(row.value));

@@ -101,7 +101,7 @@ Examples:
 
 This will take the centroid of the bbox parameter and a supplied radius parameter in meters and filter the rectangularly shaped bounding box result set by circular radius.
 
-**WARNING** This only works with on points, not lines or polygons. Also, it approximates a circle using a flat projection so the larger your radius the more inaccuracy there will be in your result set.
+**WARNING** This only works with on points, not lines or polygons yet
 
 Example:
 

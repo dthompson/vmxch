@@ -109,3 +109,23 @@ Example:
     {"rows":[{"id":"ef512bfdc9b17e9827f7275dd07d59c0","geometry":{"coordinates":[-122.676634,45.523667],"type":"Point"}},
     {"id":"ef512bfdc9b17e9827f7275dd07f4316","geometry":{"coordinates":[-122.676649,45.523966],"type":"Point"}},
     {"id":"ef512bfdc9b17e9827f7275dd08985a9","geometry":{"coordinates":[-122.676652,45.524034],"type":"Point"}}]};
+
+### cluster ###
+
+This groups points into clusters based on proximity. You can supply a threshold (distance in km) which detrimines how much area each cluster covers. 
+
+Some code inspiration from Marker Clusterer - found here: http://code.google.com/p/gmaps-utility-library/
+
+
+**WARNING** This only works with on points, not lines or polygons (not sure how that would be useful yet)
+
+
+Example:
+
+    $ curl -X GET 'http://localhost:5984/mydb/_design/geo/_spatiallist/cluster/points?bbox=-122.677,45.523,-122.675,45.524&threshold=50'
+    {"rows":[{"center":{"type":"Point","coordinates":[41.35646666666667,1.6144666666666663]},
+     "points":[
+      {"id":"20132885373657090","geo":{"type":"Point","coordinates":[41.3401,1.3596]}},
+      {"id":"20138805986066430","geo":{"type":"Point","coordinates":[41.3493,1.3631]}},
+      {"id":"16451998282944512","geo":{"type":"Point","coordinates":[41.38,2.1207]}}],"size":3}]}
+

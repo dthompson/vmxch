@@ -1,6 +1,9 @@
 function(doc) {
-  if (doc.geometry) {
-    emit(doc.geometry, {id: doc._id, geometry: doc.geometry});    
+    if (doc.geo) {
+        emit({"type": "Point",
+              "coordinates": [parseFloat(doc.geo.coordinates[0]), 
+                              parseFloat(doc.geo.coordinates[1])]}, {id: doc._id, geo:doc.geo, image:doc.image, plink:doc.plink});    
   }
 }
+
 
